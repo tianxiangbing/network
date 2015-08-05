@@ -13,7 +13,8 @@ var gulp = require('gulp'),
     watchF = require('gulp-watch');
 var paths = {
     script: 'src/*.js',
-    css: 'src/*.css'
+    css: 'src/*.css',
+    img:'src/*.gif'
 };
 gulp.task('js', function() {
     return gulp.src(paths.script).pipe(uglify()).pipe(gulp.dest('dist'));
@@ -23,6 +24,11 @@ gulp.task('css', function() {
         .pipe(cssmin({
             compatibility: 'ie8'
         })) //兼容ie
+        .pipe(gulp.dest('dist'))
+        .pipe(gulp.dest('dest'));
+});
+gulp.task('img', function() {
+    return gulp.src(paths.img)
         .pipe(gulp.dest('dist'))
         .pipe(gulp.dest('dest'));
 });
@@ -57,4 +63,4 @@ gulp.task('watch',function(){
         gulp.start('default')
     });
 });
-gulp.task('default', ['js', 'css']);
+gulp.task('default', ['js', 'css','img']);
