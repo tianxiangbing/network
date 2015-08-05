@@ -19,9 +19,132 @@
 	}
 })(this, function($) {
 	var Network = {
-		get: function() {},
-		post: function() {},
-		ajax: function() {}
+		loadingTpl: '<div class="ui-ajax-loading"><div class="ui-ajax-mask"></div><i></i></div>',
+		get: function(url, data, fun, dataType) {
+			if (typeof data === "function") {
+				fun = data;
+				data = {};
+				dataType = fun || 'json';
+			}
+			dataType = dataType || 'json';
+			var settings = {
+				url: url,
+				data: data,
+				type: 'get',
+				success: fun,
+				dataType: dataType
+			};
+			return this.ajax(settings);
+		},
+		post: function(url, data, fun, dataType) {
+			if (typeof data === "function") {
+				fun = data;
+				data = {};
+				dataType = fun || 'json';
+			}
+			dataType = dataType || 'json';
+			var settings = {
+				url: url,
+				data: data,
+				type: 'post',
+				success: fun,
+				dataType: dataType
+			};
+			return this.ajax(settings);
+		},
+		ajaxList: {},
+		_key: 1,
+		ajax: function(settings, target) {
+			var _this = this;
+			var deferred = $.Deferred();
+			if (target) {
+				if ($(target).hasClass('ui-ajaxing')) {
+					return deferred.promise();
+				}
+				$(target).addClass('ui-ajaxing');
+				//add loading...
+			}
+			_this._loading(target);
+			var obj = {
+				url: settings.url,
+				data: settings.data
+			};
+			if (_this._hasRequest(obj.url, obj.data)) {
+				return deferred.promise();
+			}
+			_this.ajaxList[_this._key] = obj;
+			_this._key++;
+			return $.ajax(settings).always(function() {
+				$(target).removeClass('ui-ajaxing');
+				delete _this.ajaxList[_this._hasRequest(settings.url, settings.data)];
+				_this._removeLoading(target)
+			}).fail(function(e){
+				alert('系统出错！可能您需要刷新后再试！')
+			});
+		},
+		_hasRequest: function(url, data) {
+			var _this = this;
+			data = _this._convertObject(data);
+			//console.log(data,_this.ajaxList)
+			for (var j in _this.ajaxList) {
+				var item = _this.ajaxList[j];
+				if (item.url == url && _this._convertObject(item.data) == data) {
+					return j;
+				}
+			}
+			return false;
+		},
+		_convertObject: function(data) {
+			if (data && typeof data == "object") {
+				var a = [];
+				for (var i in data) {
+					a.push(i + "=" + data[i]);
+				}
+				data = a.join('&');
+			}
+			return data;
+		},
+		_removeLoading: function(target) {
+			var content = $(target || "html");
+			var loading = $(content).data('loading');
+			loading.remove();
+			$(content).data('loading', null);
+		},
+		_loading: function(target) {
+			var _this = this;
+			var content = $(target || "html");
+			var loading = $(content).data('loading');
+			if (!loading) {
+				loading = $(_this.loadingTpl);
+				$('body').append(loading);
+				$(content).data('loading', loading);
+			}
+			var ch = $(content).outerHeight();
+			var cw = $(content).outerWidth();
+			if (!target) {
+				ch = Math.max($('html').height(), $(window).height());
+				cw = Math.max($('html').height(), $(window).width());
+			}
+			loading.height(ch).width(cw);
+			loading.find('div').height(ch).width(cw);
+			if (ch < 100) {
+				loading.find('i').height(ch).width(ch);
+			}
+			var offset = $(content).offset();
+			loading.css({
+				top: offset.top,
+				left: offset.left
+			});
+			var icon = loading.find('i');
+			var h = target ? ch : ch + $(window).scrollTop();
+			var w = target ? cw : cw + $(window).scrollLeft();
+			var top = (h - icon.height()) / 2;
+			var left = (w - icon.width()) / 2;
+			icon.css({
+				top: top,
+				left: left
+			})
+		}
 	}
 	return Network;
 });

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>network</title>
+	<link rel="stylesheet" href="../src/network.css">
+</head>
+<body>
+	<br>
+	<br>
+	<br>
+	<input type="button" id="btn-send" value='ajax'>
+	<input type="button" id="btn-send2" value='ajax2'>
+	<input type="button" id="btn-send3" value='ajax3'>
+	<input type="button" id="btn-send4" value='ajax4'>
+	<br>
+	<br>
+	<br>
+	<script src="../src/jquery-1.11.2.js"></script>
+	<script src="../src/network.js"></script>
+	<script>
+	$(function() {
+		$('#btn-send').click(function() {
+			Network.ajax({
+				url: "/ajax.json",
+				data: "a=1",
+				beforeSend: function() {
+					console.log('发起请求')
+				}
+			},this).done(function() {
+				console.log('请求结束')
+			});
+		});
+		$('#btn-send2').click(function() {
+			Network.ajax({
+				url: "/ajax.json",
+				data: {a:2},
+				beforeSend: function() {
+					console.log('发起请求')
+				}
+			}).done(function() {
+				console.log('请求结束')
+			});
+		});
+		$('#btn-send3').click(function() {
+			console.log('发起get请求')
+			Network.get("/ajax.json", {
+					a: 2
+				},
+				function() {
+				}
+			).done(function() {
+				console.log('get请求结束')
+			});
+		});
+		$('#btn-send4').click(function() {
+			console.log('发起post请求')
+			Network.post("/ajax.json", {
+					a: 2
+				},
+				function() {
+				}
+			).done(function() {
+				console.log('post请求结束')
+			});
+		});
+	});
+	</script>
+</body>
+</html>
