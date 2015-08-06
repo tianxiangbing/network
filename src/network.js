@@ -79,7 +79,7 @@
 				delete _this.ajaxList[_this._hasRequest(settings.url, settings.data)];
 				_this._removeLoading(target)
 			}).fail(function(e){
-				alert('系统出错！可能您需要刷新后再试！')
+				alert('系统出错！可能您需要刷新后再试！');
 			});
 		},
 		_hasRequest: function(url, data) {
