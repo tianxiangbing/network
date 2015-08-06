@@ -8,14 +8,21 @@ ajax请求的重写,防重复点击
 效果如下图
 ![逗比](example/network.jpg)
 #API
-##ajax:({},target)
-	ajax调用,同jquery的ajax,但多了一个target参数，
-	当传入此参数时loading将在target上loading,如果不传，加载效果就是全屏的。
+##ajax:(settings,target)
+	ajax调用,settings同jquery的ajax,但多了一个oneRequest参数,此参数有时，会标识该请求只能成功发送一次，判断成功的标准是oneRequest返回true.
+	target当传入此参数时loading将在target上loading,如果不传，加载效果就是全屏的。
 ***
 	$('#btn-send').click(function() {
 		Network.ajax({
 			url: "/ajax.json",
 			data: "a=1",
+			oneRequest:function(result){
+				if(result.status){
+					return true;
+				}else{
+					return false;
+				}
+			}
 			beforeSend: function() {
 				console.log('发起请求')
 			}

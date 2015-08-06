@@ -64,20 +64,24 @@
 				$(target).addClass('ui-ajaxing');
 				//add loading...
 			}
-			_this._loading(target);
 			var obj = {
 				url: settings.url,
 				data: settings.data
 			};
+			settings.dataType = settings.dataType||"json";
 			if (_this._hasRequest(obj.url, obj.data)) {
 				return deferred.promise();
 			}
+			_this._loading(target);
 			_this.ajaxList[_this._key] = obj;
 			_this._key++;
-			return $.ajax(settings).always(function() {
-				$(target).removeClass('ui-ajaxing');
-				delete _this.ajaxList[_this._hasRequest(settings.url, settings.data)];
-				_this._removeLoading(target)
+			return $.ajax(settings).always(function(result) {
+				//当返回失败或无一次限制时移除这些
+				if(!settings.oneRequest || !settings.oneRequest(result) ){
+					$(target).removeClass('ui-ajaxing');
+					delete _this.ajaxList[_this._hasRequest(settings.url, settings.data)];
+				}
+				_this._removeLoading(target);
 			}).fail(function(e){
 				alert('系统出错！可能您需要刷新后再试！');
 			});
@@ -125,6 +129,7 @@
 				ch = Math.max($('html').height(), $(window).height());
 				cw = Math.max($('html').height(), $(window).width());
 			}
+			console.log(cw,ch)
 			loading.height(ch).width(cw);
 			loading.find('div').height(ch).width(cw);
 			if (ch < 100) {

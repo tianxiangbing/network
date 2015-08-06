@@ -13,6 +13,7 @@
 	<input type="button" id="btn-send2" value='ajax2'>
 	<input type="button" id="btn-send3" value='ajax3'>
 	<input type="button" id="btn-send4" value='ajax4'>
+	<input type="button" id="btn-send5" value='只能成功提交一次'>
 	<br>
 	<br>
 	<br>
@@ -62,6 +63,24 @@
 				}
 			).done(function() {
 				console.log('post请求结束')
+			});
+		});
+		$('#btn-send5').click(function() {
+			Network.ajax({
+				url: "/ajax.json",
+				data: "a=3",
+				beforeSend: function() {
+					console.log('发起请求')
+				},
+				oneRequest:function(result){
+					if(result.status){
+						return true;
+					}else{
+						return false;
+					}
+				}
+			},this).done(function() {
+				console.log('请求结束')
 			});
 		});
 	});
