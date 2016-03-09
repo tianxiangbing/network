@@ -59,7 +59,7 @@
 	$(function() {
 		$('#btn-send').click(function() {
 			Network.ajax({
-				url: "/ajax.json",
+				url: "ajax.json",
 				data: "a=1",
 				beforeSend: function() {
 					console.log('发起请求')
@@ -70,7 +70,7 @@
 		});
 		$('#btn-send2').click(function() {
 			Network.ajax({
-				url: "/ajax.json",
+				url: "ajax.json",
 				data: {a:2},
 				beforeSend: function() {
 					console.log('发起请求')
@@ -81,7 +81,7 @@
 		});
 		$('#btn-send3').click(function() {
 			console.log('发起get请求')
-			Network.get("/ajax.json", {
+			Network.get("ajax.json", {
 					a: 2
 				},
 				function() {
@@ -92,7 +92,7 @@
 		});
 		$('#btn-send4').click(function() {
 			console.log('发起post请求')
-			Network.post("/ajax.json", {
+			Network.post("ajax.json", {
 					a: 2
 				},
 				function() {
@@ -103,7 +103,7 @@
 		});
 		$('#btn-send5').click(function() {
 			Network.ajax({
-				url: "/ajax.json",
+				url: "ajax.json",
 				data: "a=3",
 				beforeSend: function() {
 					console.log('发起请求')
