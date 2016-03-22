@@ -138,7 +138,7 @@
 			var cw = $(content).outerWidth();
 			if (!target) {
 				ch = Math.max($('html').height(), $(window).height());
-				cw = Math.max($('html').height(), $(window).width());
+				cw = Math.max($('html').width(), $(window).width());
 			}
 			console.log(cw,ch)
 			loading.height(ch).width(cw);
